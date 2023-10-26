@@ -1,5 +1,3 @@
-// TODO: Run setup-firebase.sh
-
 // ignore_for_file: lines_longer_than_80_chars, avoid_classes_with_only_static_members, do_not_use_environment, constant_identifier_names
 import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 import 'package:flutter/foundation.dart'
@@ -16,6 +14,12 @@ class DefaultFirebaseOptions {
     }
 
     if (kIsWeb) {
+      if (flavorName == 'dev') {
+        return _dev_web;
+      }
+      if (flavorName == 'prod') {
+        return _prod_web;
+      }
       throw UnsupportedError(
         'Flavor $flavorName does not support Web.',
       );
@@ -28,7 +32,7 @@ class DefaultFirebaseOptions {
         );
       case TargetPlatform.iOS:
         throw UnsupportedError(
-          'Flavor $flavorName does not support iOS.',
+         'Flavor $flavorName does not support iOS.',
         );
       case TargetPlatform.macOS:
         throw UnsupportedError(
@@ -52,4 +56,26 @@ class DefaultFirebaseOptions {
         );
     }
   }
+
+  static const FirebaseOptions _dev_web = FirebaseOptions(
+    apiKey: 'AIzaSyA6JFQlFxUspYvN4F1DVTVIb2h-ISeoDw4',
+    appId: '1:629337054597:web:1f9296495ba47c248df8ec',
+    messagingSenderId: '629337054597',
+    projectId: 'lyric-generating-music-app-dev',
+    authDomain: 'lyric-generating-music-app-dev.firebaseapp.com',
+    storageBucket: 'lyric-generating-music-app-dev.appspot.com',
+    measurementId: 'G-BBY1C3V6NN',
+  );
+
+  static const FirebaseOptions _prod_web = FirebaseOptions(
+    apiKey: 'AIzaSyBeTSjiFkaCC2XJIG7nCAjWCAyGfaNqRvM',
+    appId: '1:902759825562:web:70b82ddc09848c34731f23',
+    messagingSenderId: '902759825562',
+    projectId: 'lyric-generating-music-app',
+    authDomain: 'lyric-generating-music-app.firebaseapp.com',
+    storageBucket: 'lyric-generating-music-app.appspot.com',
+    measurementId: 'G-DPQJ3K6EJG',
+  );
+
 }
+

@@ -1,3 +1,6 @@
 {
-  "projects": {}
+  "projects": {
+    "prod": "lyric-generating-music-app",
+    "dev": "lyric-generating-music-app-dev"
+  }
 }
