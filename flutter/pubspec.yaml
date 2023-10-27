@@ -10,6 +10,10 @@ dependencies:
   firebase_core: ^2.19.0
   flutter:
     sdk: flutter
+  flutter_lyric: ^2.0.4+6
 
 flutter:
   uses-material-design: true
+
+
+

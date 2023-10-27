@@ -1,5 +1,7 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
+/*import 'package:flutter_lyric/lyrics_reader.dart';*/
 
 void main() => runApp(MyApp());
 
@@ -106,40 +108,43 @@ class _MyHomePageState extends State<MyHomePage> {
             color: Colors.grey[300],
             child: Column(
               children: [
-                ..._playlist.map((song) => GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      if (song == 'The star') {
-                        _currentLyrics = [
-                          'Twinkle, twinkle, little star,',
-                          'How I wonder what you are!',
-                          'Up above the world so high,',
-                          'Like a diamond in the sky.',
-                          'Twinkle, twinkle, little star,',
-                          'How I wonder what you are!',
-                        ];
-                      } else if (song == 'キセキ') {
-                        _currentLyrics = [
-                          '明日、今日よりも好きになれる',
-                          '溢れる想いが止まらない',
-                          '今もこんなに好きでいるのに',
-                          '言葉に出来ない',
-                          '君のくれた日々が積み重なり',
-                          '過ぎ去った日々2人歩いた『軌跡』',
-                          '僕らの出逢いがもし偶然ならば?',
-                          '運命ならば?',
-                          '君に巡り合えた それって『奇跡』'
-                        ];
-                      }
-                      _sliderValue = 0;  // 進行バーを0にリセット
-                      _isPlaying = false;  // 再生を停止
-                      _stopTimer();  // タイマーを停止
-                    });
-                  },
-                  child: ListTile(title: Text(song)),
-                )).toList(),
-
-                TextField(controller: _songController, decoration: InputDecoration(hintText: '  Add new song...')),
+                ..._playlist
+                    .map((song) => GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              if (song == 'The star') {
+                                _currentLyrics = [
+                                  'Twinkle, twinkle, little star,',
+                                  'How I wonder what you are!',
+                                  'Up above the world so high,',
+                                  'Like a diamond in the sky.',
+                                  'Twinkle, twinkle, little star,',
+                                  'How I wonder what you are!',
+                                ];
+                              } else if (song == 'キセキ') {
+                                _currentLyrics = [
+                                  '明日、今日よりも好きになれる',
+                                  '溢れる想いが止まらない',
+                                  '今もこんなに好きでいるのに',
+                                  '言葉に出来ない',
+                                  '君のくれた日々が積み重なり',
+                                  '過ぎ去った日々2人歩いた『軌跡』',
+                                  '僕らの出逢いがもし偶然ならば?',
+                                  '運命ならば?',
+                                  '君に巡り合えた それって『奇跡』'
+                                ];
+                              }
+                              _sliderValue = 0; // 進行バーを0にリセット
+                              _isPlaying = false; // 再生を停止
+                              _stopTimer(); // タイマーを停止
+                            });
+                          },
+                          child: ListTile(title: Text(song)),
+                        ))
+                    .toList(),
+                TextField(
+                    controller: _songController,
+                    decoration: InputDecoration(hintText: '  Add new song...')),
                 ElevatedButton(
                   onPressed: () {
                     setState(() {
@@ -153,7 +158,6 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
           Expanded(
-
             child: Padding(
               padding: const EdgeInsets.all(20.0),
               child: Column(
@@ -169,13 +173,17 @@ class _MyHomePageState extends State<MyHomePage> {
                           // 3行目の場合、強調スタイルを適用
                           bool isHighlighted = idx == 2;
                           return Text(
-                            line, 
+                            line,
                             style: TextStyle(
-                              fontSize: textSize, 
-                              color: isHighlighted ? Colors.black : Colors.grey[400],
-                              fontWeight: isHighlighted ? FontWeight.bold : FontWeight.normal,
+                              fontSize: textSize,
+                              color: isHighlighted
+                                  ? Colors.black
+                                  : Colors.grey[400],
+                              fontWeight: isHighlighted
+                                  ? FontWeight.bold
+                                  : FontWeight.normal,
                             ),
-                            textAlign: TextAlign.center,  // この行を追加
+                            textAlign: TextAlign.center, // この行を追加
                           );
                         }).toList(),
                       ),
@@ -203,9 +211,12 @@ class _MyHomePageState extends State<MyHomePage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      IconButton(icon: Icon(Icons.skip_previous, size: 32), onPressed: () {}),
                       IconButton(
-                        icon: Icon(_isPlaying ? Icons.pause : Icons.play_arrow, size: 32),
+                          icon: Icon(Icons.skip_previous, size: 32),
+                          onPressed: () {}),
+                      IconButton(
+                        icon: Icon(_isPlaying ? Icons.pause : Icons.play_arrow,
+                            size: 32),
                         onPressed: () {
                           setState(() {
                             _isPlaying = !_isPlaying;
@@ -217,7 +228,9 @@ class _MyHomePageState extends State<MyHomePage> {
                           });
                         },
                       ),
-                      IconButton(icon: Icon(Icons.skip_next, size: 32), onPressed: () {}),
+                      IconButton(
+                          icon: Icon(Icons.skip_next, size: 32),
+                          onPressed: () {}),
                     ],
                   ),
                 ],
