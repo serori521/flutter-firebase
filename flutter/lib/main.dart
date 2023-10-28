@@ -6,10 +6,12 @@ import 'package:flutter_lyric/lyrics_reader.dart';
 
 import 'const.dart';
 
+// main関数: アプリのエントリーポイントです。アプリの起動時に最初に実行される関数です。
 void main() {
   runApp(MaterialApp(home: MyApp()));
 }
 
+// MyAppクラス: Flutterアプリケーションのルートウィジェットです。
 class MyApp extends StatefulWidget {
   @override
   _MyAppState createState() => _MyAppState();
@@ -35,6 +37,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
     super.initState();
   }
 
+// Scaffoldウィジェット: 基本的なアプリの構造を提供するウィジェットです。
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,11 +68,11 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
   }
 
   var lyricPadding = 40.0;
-
+//歌詞表示部分
   Stack buildReaderWidget() {
     return Stack(
       children: [
-        ...buildReaderBackground(),
+        ...buildReaderBackground(), //背景の設定
         LyricsReader(
           padding: EdgeInsets.symmetric(horizontal: lyricPadding),
           model: lyricModel,
@@ -119,13 +122,6 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
       Container(
         height: 20,
       ),
-      Text(
-        "Progress:$sliderProgress",
-        style: TextStyle(
-          fontSize: 16,
-          color: Colors.green,
-        ),
-      ),
       if (sliderProgress < max_value)
         Slider(
           min: 0,
@@ -153,66 +149,95 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
       Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          TextButton(
-              onPressed: () async {
-                if (audioPlayer == null) {
-                  audioPlayer = AudioPlayer()..play(AssetSource("music1.mp3"));
+          //前の曲に戻る
+          ElevatedButton(
+            onPressed: () {
+              // 前の曲に関する処理をここに追加します。
+            },
+            style: ElevatedButton.styleFrom(
+              primary: Colors.white,
+              onPrimary: Colors.grey,
+              elevation: 5,
+              shape: CircleBorder(),
+            ),
+            child: Icon(Icons.skip_previous),
+          ),
+          //一時停止再生
+          ElevatedButton(
+            onPressed: () async {
+              if (audioPlayer == null || !playing) {
+                audioPlayer = AudioPlayer()..play(AssetSource("music1.mp3"));
+                setState(() {
+                  playing = true;
+                });
+                audioPlayer?.onDurationChanged.listen((Duration event) {
                   setState(() {
-                    playing = true;
+                    max_value = event.inMilliseconds.toDouble();
                   });
-                  audioPlayer?.onDurationChanged.listen((Duration event) {
-                    setState(() {
-                      max_value = event.inMilliseconds.toDouble();
-                    });
+                });
+                audioPlayer?.onPositionChanged.listen((Duration event) {
+                  if (isTap) return;
+                  setState(() {
+                    sliderProgress = event.inMilliseconds.toDouble();
+                    playProgress = event.inMilliseconds;
                   });
-                  audioPlayer?.onPositionChanged.listen((Duration event) {
-                    if (isTap) return;
-                    setState(() {
-                      sliderProgress = event.inMilliseconds.toDouble();
-                      playProgress = event.inMilliseconds;
-                    });
-                  });
+                });
 
-                  audioPlayer?.onPlayerStateChanged.listen((PlayerState state) {
-                    setState(() {
-                      playing = state == PlayerState.playing;
-                    });
+                audioPlayer?.onPlayerStateChanged.listen((PlayerState state) {
+                  setState(() {
+                    playing = state == PlayerState.playing;
                   });
+                });
+              } else {
+                if (playing) {
+                  audioPlayer?.pause();
                 } else {
                   audioPlayer?.resume();
                 }
-              },
-              child: Text("Play")),
-          Container(
-            width: 10,
+                setState(() {
+                  playing = !playing;
+                });
+              }
+            },
+            style: ElevatedButton.styleFrom(
+              primary: playing ? Colors.grey : Colors.white,
+              onPrimary: playing ? Colors.white : Colors.grey,
+              elevation: playing ? 0 : 5,
+              shape: CircleBorder(),
+            ),
+            child: Icon(playing ? Icons.pause : Icons.play_arrow),
           ),
-          TextButton(
-              onPressed: () async {
-                audioPlayer?.pause();
-              },
-              child: Text("Pause")),
-          Container(
-            width: 10,
+          //次の曲
+          ElevatedButton(
+            onPressed: () {
+              // 次の曲に関する処理をここに追加します。
+            },
+            style: ElevatedButton.styleFrom(
+              primary: Colors.white,
+              onPrimary: Colors.grey,
+              elevation: 5,
+              shape: CircleBorder(),
+            ),
+            child: Icon(Icons.skip_next),
           ),
-          TextButton(
-              onPressed: () async {
-                audioPlayer?.stop();
-                audioPlayer = null;
-              },
-              child: Text("Stop")),
         ],
-      ),
+      )
     ];
   }
 
   var playing = false;
-
+// 背景の設定
   List<Widget> buildReaderBackground() {
     return [
       Positioned.fill(
-        child: Image.asset(
-          "bg.jpeg",
-          fit: BoxFit.cover,
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [Colors.blue, Colors.purple], //青から紫へのグラデーション
+            ),
+          ),
         ),
       ),
       Positioned.fill(
